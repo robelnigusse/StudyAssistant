@@ -4,7 +4,6 @@ from datetime import datetime
 
 
 class MessageCreate(BaseModel):
-    role: str
     content: str
 
 
