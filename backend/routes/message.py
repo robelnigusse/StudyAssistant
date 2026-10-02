@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from uuid import UUID
 
+from services.rag_chain import ask_question
 from database.config import get_db
 from database.models.conversations import Conversation
 from database.models.messages import Message
@@ -56,14 +57,24 @@ def create_message(
         content=message.content
     )
 
+    ai_response = Message(
+        conversation_id=conversation_id,
+        role="assistant",
+        content=ask_question(
+            question=message.content,
+            )
+    )
+    
     db.add(new_message)
+    db.add(ai_response)
+
 
     # Update conversation timestamp
     conversation.updated_at = new_message.created_at
 
     db.commit()
     db.refresh(new_message)
-
+    db.refresh(ai_response)
     return new_message
 
 
