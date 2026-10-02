@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Sidebar from './components/Sidebar';
 import ChatArea from './components/ChatArea';
+import BooksModal from './components/BooksModal';
 
 const API_BASE_URL = 'http://127.0.0.1:8000';
 
@@ -12,6 +13,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isUploading, setIsUploading] = useState(false);
+  const [isBooksModalOpen, setIsBooksModalOpen] = useState(false);
   const messagesEndRef = useRef(null);
 
   const fetchConversations = async () => {
@@ -160,6 +162,7 @@ function App() {
         deleteConversation={deleteConversation}
         handleFileUpload={handleFileUpload}
         isUploading={isUploading}
+        openBooksModal={() => setIsBooksModalOpen(true)}
       />
       <ChatArea 
         isSidebarOpen={isSidebarOpen}
@@ -171,6 +174,10 @@ function App() {
         setInput={setInput}
         handleSend={handleSend}
         messagesEndRef={messagesEndRef}
+      />
+      <BooksModal 
+        isOpen={isBooksModalOpen} 
+        onClose={() => setIsBooksModalOpen(false)} 
       />
     </div>
   );

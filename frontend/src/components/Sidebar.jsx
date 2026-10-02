@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { PlusIcon, MenuIcon, MessageIcon, TrashIcon, LoaderIcon, UploadIcon } from './icons/Icons';
+import { PlusIcon, MenuIcon, MessageIcon, TrashIcon, LoaderIcon, UploadIcon, BookIcon } from './icons/Icons';
 
 export default function Sidebar({ 
   isSidebarOpen, 
@@ -9,7 +9,8 @@ export default function Sidebar({
   setCurrentConvId, 
   deleteConversation, 
   handleFileUpload, 
-  isUploading 
+  isUploading,
+  openBooksModal
 }) {
   const fileInputRef = useRef(null);
 
@@ -69,6 +70,13 @@ export default function Sidebar({
         >
           {isUploading ? <LoaderIcon /> : <UploadIcon />}
           {isUploading ? 'Uploading...' : 'Upload PDF'}
+        </button>
+        <button 
+          onClick={openBooksModal}
+          className="w-full flex items-center justify-center gap-2 px-3 py-2 mt-2 bg-[#2f2f2f] hover:bg-[#3f3f3f] text-gray-300 text-sm font-medium rounded-lg transition-colors"
+        >
+          <BookIcon />
+          Manage Books
         </button>
       </div>
     </div>
