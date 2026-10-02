@@ -105,5 +105,3 @@ def ask_question(question: str):
     response = rag_chain.invoke(question)
 
     return response.content[0]["text"]
-
-print(ask_question("What is software testing?"))

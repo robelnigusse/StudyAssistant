@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from uuid import UUID
@@ -15,8 +17,12 @@ router = APIRouter(
 )
 
 
+
+from pydantic import BaseModel
+class ChatResponse(BaseModel):
+    answer: str
 # CREATE MESSAGE
-@router.post("/messages", response_model=MessageResponse)
+@router.post("/messages", response_model=ChatResponse)
 def create_message(
     message: MessageCreate,
     conversation_id: UUID | None = None,
@@ -56,26 +62,27 @@ def create_message(
         role="user",
         content=message.content
     )
-
+    answer = ask_question(
+        question=message.content,
+    )
     ai_response = Message(
         conversation_id=conversation_id,
         role="assistant",
-        content=ask_question(
-            question=message.content,
-            )
+        content=answer
     )
     
     db.add(new_message)
     db.add(ai_response)
 
-
     # Update conversation timestamp
-    conversation.updated_at = new_message.created_at
+    conversation.updated_at = datetime.now(timezone.utc)
 
     db.commit()
     db.refresh(new_message)
     db.refresh(ai_response)
-    return new_message
+    return {
+        "answer": answer,
+    }
 
 
 # GET ALL MESSAGES
