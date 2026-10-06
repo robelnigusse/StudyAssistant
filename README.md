@@ -29,19 +29,52 @@ When you ask a question, the backend calculates an embedding for your query, ret
 
 ## Running the Application
 
-### Backend
+Before running the application, you **must** configure your environment variables. 
+Navigate to the `backend/` directory, copy `.env.example` to `.env`, and insert your Gemini API Key.
+```bash
+cp backend/.env.example backend/.env
+```
+*(Make sure to open `backend/.env` and replace `your_gemini_api_key_here` with your actual key!)*
+
+You can run this project in two ways: using Docker (Recommended) or manually.
+
+### Method 1: Using Docker (Recommended)
+
+Running with Docker automatically sets up the PostgreSQL database, backend server, and frontend server in isolated containers without requiring local dependencies.
+
+1. Ensure Docker Desktop is running.
+2. In the root directory of the project, run:
+```powershell
+# We set BUILD_PROVENANCE=0 to bypass a known freeze bug with Docker BuildKit on Windows
+$env:BUILD_PROVENANCE="0"; docker compose up --build
+```
+
+3. The application will be available at:
+   - **Frontend**: `http://localhost:5173`
+   - **Backend API**: `http://localhost:8000`
+
+### Method 2: Running Manually
+
+If you prefer to run the application natively without Docker, you will need to host your own PostgreSQL database locally.
+
+1. **Database Setup**: Ensure PostgreSQL is installed and running on your machine. Update the `DB_URL` in your `backend/.env` file to point to your local PostgreSQL instance (the default provided in `.env.example` is `postgresql+psycopg://<your_username>:<your_password>@localhost:5432/<your_database_name>`).
+
+2. **Backend**:
 Navigate to the `backend` directory, activate your virtual environment, and run the server:
 ```bash
 cd backend
 # Activate virtual environment (Windows)
 .\venv\Scripts\Activate.ps1
-# Start server
+# Install dependencies
+pip install -r requirements.txt
+# Start FastAPI server
 uvicorn main:app --reload
 ```
 
-### Frontend
-Navigate to the `frontend` directory and start the Vite development server:
+3. **Frontend**:
+Open a new terminal, navigate to the `frontend` directory, and start the Vite development server:
 ```bash
 cd frontend
+npm install
 npm run dev
 ```

@@ -1,5 +1,16 @@
-from fastapi import FastAPI
+import os
+import sys
 
+# Validate environment variables before booting the app
+if not os.getenv("GOOGLE_API_KEY") or os.getenv("GOOGLE_API_KEY") == "your_gemini_api_key_here":
+    print("\n" + "="*70)
+    print("❌ CRITICAL ERROR: GOOGLE_API_KEY is missing or invalid!")
+    print("Please copy 'backend/.env.example' to 'backend/.env' and insert your actual Gemini API Key.")
+    print("If you are using Docker, make sure the .env file exists before running docker compose up.")
+    print("="*70 + "\n")
+    sys.exit(1)
+
+from fastapi import FastAPI
 from database.config import engine, base
 from database.models.conversations import Conversation
 from database.models.messages import Message
